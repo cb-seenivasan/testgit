@@ -17,6 +17,15 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+  test-job:
+    machine:
+      image: ubuntu-1604:202104-01
+    
+    steps:
+      - run:
+          name: "First job"
+          command: "echo First job"
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -24,3 +33,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      - test-job
