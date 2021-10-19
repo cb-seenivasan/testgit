@@ -33,4 +33,7 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-      - test-job
+      - test-job:
+          name: test-jobs
+          requires:
+              - say-hello
