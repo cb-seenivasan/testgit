@@ -46,8 +46,8 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-      - example-job
-      - test-job:
-          name: test-jobs
-          requires:
-              - say-hello
+      # - example-job
+      - test-job
+          # name: test-jobs
+          # requires:
+          #     - say-hello
