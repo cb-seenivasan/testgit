@@ -22,7 +22,7 @@ jobs:
           command: "echo Hello, World!"
   test-job:
     machine: true
-    resource_class: your-namespace/your-resource
+    resource_class: my-test-namespace/abc
     
     steps:
       - run:
