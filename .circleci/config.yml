@@ -14,7 +14,7 @@ jobs:
       # replace with your preferred image
       - image: cimg/base:stable
     steps:
-      - aws-cli/install
+      # - aws-cli/install
       - aws-cli/setup:
           aws-access-key-id: INFRA_ACCESS 
           aws-secret-access-key: INFRA_SECRET 
@@ -29,8 +29,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          command: "aws sts get-caller-identity --region us-east-1"
   test-job:
     machine: true
     resource_class: my-test-namespace/abc
@@ -61,7 +60,7 @@ workflows:
             - aws-cli-login
       - aws-cli-login
       # - example-job
-      - test-job
+      # - test-job
           # name: test-jobs
           # requires:
           #     - say-hello
