@@ -5,9 +5,19 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 orbs:
+  aws-cli: circleci/aws-cli@2.0.3
   aws-ecs: circleci/aws-ecs@2.2.1
 
 jobs:
+  aws-cli-login:
+    docker:
+      # replace with your preferred image
+      - image: cimg/base:stable
+    steps:
+      - aws-cli/setup:
+          aws-access-key-id: INFRA_ACCESS 
+          aws-secret-access-key: INFRA_SECRET 
+
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -45,7 +55,10 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - say-hello:
+          requires:
+            - aws-cli-login
+      - aws-cli-login
       # - example-job
       - test-job
           # name: test-jobs
