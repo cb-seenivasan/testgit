@@ -14,6 +14,7 @@ jobs:
       # replace with your preferred image
       - image: cimg/base:stable
     steps:
+      - aws-cli/install
       - aws-cli/setup:
           aws-access-key-id: INFRA_ACCESS 
           aws-secret-access-key: INFRA_SECRET 
