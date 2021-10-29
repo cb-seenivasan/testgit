@@ -26,6 +26,7 @@ workflows:
           repo: "${ECR_REPO_NAME}"
           tag: "${CIRCLE_SHA1}"
       - aws-ecs/deploy-service-update:
+          docker-image-for-job: "python:3.7-alpine"
           requires:
             - aws-ecr/build-and-push-image 
           family: "first-run-task-definition"
