@@ -28,7 +28,7 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image 
-          family: "first-run-task-definition:3"
+          family: "first-run-task-definition"
           cluster-name: "test-ecs-cluster"
           service-name: "test-service"
           container-image-name-updates: "container=test-spring-app,image-and-tag=${AWS_ECR_ACCOUNT_URL}/${ECR_REPO_NAME}:${CIRCLE_SHA1}"
