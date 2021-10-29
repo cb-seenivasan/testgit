@@ -12,7 +12,7 @@ jobs:
   generate-jar:
     docker:
       # replace with your preferred image
-      - image: cimg/base:stable
+      - image: openjdk:8-jdk-alpine
     steps:
       - checkout
       - run: ./gradlew clean build
