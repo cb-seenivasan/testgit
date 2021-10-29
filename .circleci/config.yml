@@ -4,40 +4,36 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-# orbs:
-#   aws-ecr: circleci/aws-ecr@7.2.0
-#   aws-ecs: circleci/aws-ecs@2.2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@7.2.0
+  aws-ecs: circleci/aws-ecs@2.2.1
 
 jobs:
   generate-jar:
     docker:
-      # replace with your preferred image
       - image: openjdk:8-jdk-alpine
     steps:
-      - checkout
-      - run: ./gradlew clean build
-      - run: ls
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build/libs/hello-word-0.0.1-SNAPSHOT.jar
-            - Dockerfile
-  print-workspace:
-    docker:
-      # replace with your preferred image
-      - image: cimg/base:stable
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run: ls /tmp/workspace
+      - checkout    
 
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  test-workspace-job:
+  build-and-deploy:
     jobs:
-      - generate-jar
-      - print-workspace:
-          requires:
-            - generate-jar
+      # - generate-jar
+      - aws-ecr/build-and-push-image:
+          repo: "cb-infra-poc-minions"
+          tag: "${CIRCLE_SHA1}"
+      # - aws-ecs/deploy-service-update:
+      #     requires:
+      #       - aws-ecr/build-and-push-image 
+      #     family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+      #     cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+      #     container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
+  # test-workspace-job:
+  #   jobs:
+  #     - generate-jar
+  #     - print-workspace:
+  #         requires:
+  #           - generate-jar
