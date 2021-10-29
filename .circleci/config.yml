@@ -4,63 +4,39 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-orbs:
-  aws-cli: circleci/aws-cli@2.0.3
-  aws-ecs: circleci/aws-ecs@2.2.1
+# orbs:
+#   aws-ecr: circleci/aws-ecr@7.2.0
+#   aws-ecs: circleci/aws-ecs@2.2.1
 
 jobs:
-  aws-cli-login:
+  generate-jar:
     docker:
       # replace with your preferred image
       - image: cimg/base:stable
-    steps:
-      # - aws-cli/install
-      - aws-cli/setup:
-          aws-access-key-id: INFRA_ACCESS 
-          aws-secret-access-key: INFRA_SECRET 
-
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run:
-          command: "aws sts get-caller-identity --region us-east-1"
-  test-job:
-    machine: true
-    resource_class: my-test-namespace/abc
-    
-    steps:
-      - run:
-          name: "First job"
-          command: "echo First job"
-
-  example-job:
+      - run: ./gradlew clean build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/lib/hello-word-0.0.1-SNAPSHOT.jar
+            - Dockerfile
+  print-workspace:
     docker:
       # replace with your preferred image
       - image: cimg/base:stable
     steps:
-      - aws-ecs/update-task-definition:
-          container-env-var-updates: aaa 
-          container-image-name-updates: sss 
-          family: dddd 
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: ls /tmp/workspace
 
+
+  
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  test-workspace-job:
     jobs:
-      - say-hello:
-          requires:
-            - aws-cli-login
-      - aws-cli-login
-      # - example-job
-      # - test-job
-          # name: test-jobs
-          # requires:
-          #     - say-hello
+      - generate-jar
+      - print-workspace
