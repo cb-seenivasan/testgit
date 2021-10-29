@@ -16,10 +16,11 @@ jobs:
     steps:
       - checkout
       - run: ./gradlew clean build
+      - run: ls
       - persist_to_workspace:
           root: .
           paths:
-            - build/lib/hello-word-0.0.1-SNAPSHOT.jar
+            - build/libs/hello-word-0.0.1-SNAPSHOT.jar
             - Dockerfile
   print-workspace:
     docker:
@@ -31,12 +32,12 @@ jobs:
       - run: ls /tmp/workspace
 
 
-  
-
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   test-workspace-job:
     jobs:
       - generate-jar
-      - print-workspace
+      - print-workspace:
+          requires:
+            - generate-jar
