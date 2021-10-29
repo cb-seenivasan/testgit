@@ -23,14 +23,15 @@ workflows:
     jobs:
       # - generate-jar
       - aws-ecr/build-and-push-image:
-          repo: "cb-infra-poc-minions"
+          repo: "${ECR_REPO_NAME}"
           tag: "${CIRCLE_SHA1}"
-      # - aws-ecs/deploy-service-update:
-      #     requires:
-      #       - aws-ecr/build-and-push-image 
-      #     family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-      #     cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-      #     container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image 
+          family: "first-run-task-definition:3"
+          cluster-name: "test-ecs-cluster"
+          service-name: "test-service"
+          container-image-name-updates: "container=test-spring-app,image-and-tag=${AWS_ECR_ACCOUNT_URL}/${ECR_REPO_NAME}:${CIRCLE_SHA1}"
   # test-workspace-job:
   #   jobs:
   #     - generate-jar
