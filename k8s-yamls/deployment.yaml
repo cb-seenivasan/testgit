@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: testgit-poc
+  name: testgit-poc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testgit-poc
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: testgit-poc
+    spec:
+      containers:
+      - image: 571790562270.dkr.ecr.us-west-2.amazonaws.com/seenivasantest:codefresh
+        name: seenivasantest
