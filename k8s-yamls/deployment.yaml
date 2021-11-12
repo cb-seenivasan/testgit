@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: testgit-poc
-  name: testgit-poc
+    app: seenivasan-test
+  name: seenivasan-test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: testgit-poc
+      app: seenivasan-test
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: testgit-poc
+        app: seenivasan-test
     spec:
       containers:
       - image: 571790562270.dkr.ecr.us-west-2.amazonaws.com/seenivasantest:codefresh
